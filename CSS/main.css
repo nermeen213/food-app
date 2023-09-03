@@ -55,7 +55,7 @@ body {
 .navbar-icon {
     min-height: 100vh;
     background-color: #fff;
-    width: 90px;
+    width: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

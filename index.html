@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
+    <title>Yummy</title>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <link rel="stylesheet" href="./CSS/all.min.css">
+    <link rel="stylesheet" href="./CSS/bootstrap.min.css">
+    <link rel="stylesheet" href="./CSS/main.css">
+</head>
+<body>
+    <div class="loading">
+        <span class="loader"></span>
+    </div>
+
+     <section id="home" class="d-flex">
+        <div class="nav-side d-flex ">
+            <div class="navbar text-white">
+                <div class="ul">
+                    <ul class="list-unstyled">
+                        <li class="py-2 position-relative cursor-pointer" id="search" onclick="closenav()" style="top: 0px;">Search</li>
+                        <li class="py-2 position-relative cursor-pointer" id="category" onclick="getcategory() ; closenav()" style="top: 0px;">Categories</li>
+                        <li class="py-2 position-relative cursor-pointer"  style="top: 0px;" onclick=" getArea() ; closenav()">Area</li>
+                        <li class="py-2 position-relative cursor-pointer" onclick="getgradient() ; closenav()" style="top: 0px;">Ingredients</li>
+                        <li class="py-2 position-relative cursor-pointer" id="contactUs" onclick="displaycontact();closenav()" style="top: 0px;">Contact Us</li>
+                    </ul>
+                </div>
+                <div class="nav-footer">
+                    <div class="icons"  >
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div class="footer">
+                        <p class=''>Copyright Â© 2019 All Rights <br>Reserved.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-icon">
+                
+                <img src="./img/logo.png" alt="" class="logo">
+                <div>
+                    <i class="fa-solid open-close-icon fa-2x fa-x d-none"></i>
+                <i class="fa-solid fa-bars fs-2 "></i>
+               
+
+                </div>
+                
+                <div>
+                    <i class="fa-solid fa-globe d-block"></i>
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="container" id="searchContainer">
+           
+            <div class="row g-4" id="demo">
+
+
+
+
+
+                
+            </div>
+    
+           
+        </div>
+       
+    </section>    
+
+
+
+
+        
+
+    
+
+
+      
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/main.js"></script>
+   
+   
+</body>
+</html>

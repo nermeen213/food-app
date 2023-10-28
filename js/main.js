@@ -1,8 +1,11 @@
+let searchcontainer=document.getElementById('searchContainer');
+let mainContainer=document.getElementById('demo');
+console.log(searchcontainer);
 $('.open-close-icon ').on('click',function(){
   $('#home .nav-side').animate({left:'-250px'},1000);
   $('.open-close-icon').addClass('d-none')
   $('#home .fa-bars').removeClass('d-none')
- 
+ $('.ul li').animate({top:300},1000)
    
 });
 $('#home .fa-bars').on('click',function(){
@@ -10,35 +13,53 @@ $('#home .fa-bars').on('click',function(){
   $('.open-close-icon').removeClass('d-none')
   $('#home .fa-bars').addClass('d-none')
  
+  $('.ul li').eq(0).animate({top:0},500)
+  $('.ul li').eq(1).animate({top:0},600)
+  $('.ul li').eq(2).animate({top:0},700)
+  $('.ul li').eq(3).animate({top:0},800)
+  $('.ul li').eq(4).animate({top:0},900)
+
    
 });
+function closenav(){
+  $('.nav-side').animate({left:'-250px'},1000)
+  $('.open-close-icon').addClass('d-none')
+  $('#home .fa-bars').removeClass('d-none')
+  $('.ul li').animate({top:300},500)
+}
 $(document).ready(function(){
-  $('.loader').fadeOut(2000 ,function(){
-    $('.loading').slideUp(1500 ,function(){
-      $('body').css('overflow','auto')
-    })
+  getData("").then(()=>{
+   
+      $('.loading').fadeOut(500)
+        $('body').css('overflow','visible')
+        $('.inner-loading').fadeOut(500)
+      
+  
+    
 
-  });
+  })
+ 
 
 })
 
-// $( function(){
- 
-// } )
 
 
-let mainContainer=document.getElementById('demo');
+
+
+
+
 let colum =document.getElementById('col');
+console.log(searchcontainer);
 
 // *********************************
-let data=[]
+
 async function getData(meal){
  
-  let http = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`);
-  let response =await http.json();
-  data= response.meals
+  let response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`);
+  response =await response.json();
+  
  
-  displayData()
+  displayData(response.meals)
  
 }
 
@@ -46,15 +67,15 @@ getData("")
 
 
 
-function displayData(){
+function displayData(arr){
   let box='';
- for(let i=0 ; i<data.length ;i++){
+ for(let i=0 ; i<arr.length ;i++){
   box+=`
   <div class="col-md-3 colum">
-                    <div class="image" onclick="getMealByDetails('${data[i].idMeal}')">
-                        <img src="${data[i].strMealThumb}" alt="" class="w-100 rounded-3 id="photo" >
+                    <div class="image" onclick="getMealByDetails('${arr[i].idMeal}')">
+                        <img src="${arr[i].strMealThumb}" alt="" class="w-100 rounded-3 id="photo" >
                         <div class="layer d-flex justify-content-center align-items-center">
-                            <h3>${data[i].strMeal}</h3>
+                            <h3 class="text-dark">${arr[i].strMeal}</h3>
                         </div>
 
                     </div>
@@ -64,7 +85,7 @@ function displayData(){
 
 
  }
- document.getElementById('demo').innerHTML=box; 
+ mainContainer.innerHTML=box; 
 
 
   
@@ -77,23 +98,23 @@ function displayData(){
 
 }
 
-let element=document.querySelectorAll('.container .colum');
+// let element=document.querySelectorAll('.container .colum');
  
-for(let i=0 ; i<element.length;i++){
-  element[i].addEventListener('click',function(e){
-    let find =e.target
+// for(let i=0 ; i<element.length;i++){
+//   element[i].addEventListener('click',function(e){
+//     let find =e.target
    
-    let parent =$(find).parents('.row');
-    log
+//     let parent =$(find).parents('.row');
+//     log
 
     
 
 
 
-  })
+//   })
  
 
-}
+// }
 
 
 
@@ -103,25 +124,47 @@ for(let i=0 ; i<element.length;i++){
 
 // search
 
-let container = document.getElementById('demo')
+
 let searchUl =document.getElementById('search');
 
 let name=document.getElementById("nameInput")
 let letterInput=document.getElementById("firstLetter")
 
 
-function displaysearch(){
-container.innerHTML=`
-<div class="col-md-6">
-<input type="text"  onkeyup="searchByName(this.value)" placeholder="search By Name" class="control-form w-100 py-2 rounded-3" id="nameInput">
+function showSearchInput(){
+  
+  searchcontainer.innerHTML=`
+  <div class="row py-2 ">
+  <div class="col-md-6">
+      <input type="text" onkeyup="searchByName(this.value)" placeholder="search By Name" class="control-form w-100 py-2 rounded-3" id="nameInput">
+      </div>
+      <div class="col-md-6">
+      <input type="text" onkeyup="searchByLetter(this.value)" placeholder="search By First Letter" class="control-form w-100 py-2 rounded-3">
+      </div>
+
 </div>
-<div class="col-md-6">
-<input type="text" placeholder="search By First Letter" class="control-form w-100 py-2 rounded-3">
-</div>
+
+
 `
+mainContainer.innerHTML=""
 
 }
-searchUl.addEventListener('click',displaysearch)
+
+async function searchByName(term){
+  let response =await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${term}`)
+  response=await response.json()
+  console.log(response?.meals);
+
+  response.meals?displayData(response.meals):displayData([])
+}
+
+
+async function searchByLetter(term){
+  let respone = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${term}`)
+
+ respone= await respone.json();
+ respone.meals?displayData(respone.meals):displayData([])
+}
 
 
 // **********************category************************
@@ -129,12 +172,13 @@ searchUl.addEventListener('click',displaysearch)
 
 
 
-// let categoriesData =[]
+
 async function getcategory(){
-  let httpCategory = await fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
-  let responseCategoary = await httpCategory.json();
-  displaycategoryData(responseCategoary.categories)
-  
+  $('.inner-loading').fadeIn(500)
+  let respons = await fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
+  respons = await respons.json();
+  displaycategoryData(respons?.categories)
+  $('.inner-loading').fadeOut(500)
 
 
 }
@@ -147,8 +191,8 @@ function displaycategoryData(arra){
                     <div class="image">
                         <img src="${arra[i].strCategoryThumb}" alt="" class="w-100 rounded-3" disabled>
                         <div class="layer text-center">
-                            <h4>${arra[i].strCategory}</h4>
-                            <p class="fs-6" >${arra[i].strCategoryDescription.split("").slice(0,50).join("")}</p>
+                            <h4 class="text-dark">${arra[i].strCategory}</h4>
+                            <p class="fs-6 text-dark" >${arra[i].strCategoryDescription.split("").slice(0,40).join("")}</p>
                         </div>
 
                     </div>
@@ -157,30 +201,34 @@ function displaycategoryData(arra){
   `
 
  }
- document.getElementById('demo').innerHTML=box;
+ mainContainer.innerHTML=box;
+
 }
 
 
-// let categorycontainer = [];
+
 async function showCategory(meal){
-  let httpgategory =await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${meal}`)
-  httpgategory = await httpgategory.json();
-  displaycategorys(httpgategory.meals)
+  $('.inner-loading').fadeIn(500)
+  let respons =await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${meal}`)
+  respons = await respons.json();
+  displaycategorys(respons?.meals)
+  $('.inner-loading').fadeOut(500)
   
 }
 
-getCategoryMeals('${arr[i].strCategory}')
+// showCategory('${arr[i].strCategory}')
 function displaycategorys(arr){
+  
   let cartona='';
   for(let i=0 ; i<arr.length ;i++){
     cartona+=
     `
     <div class="col-md-3">
-                    <div class="image" onclick="getMealByDetails('${data[i].idMeal}')">
+                    <div class="image" onclick="getMealByDetails('${arr[i].idMeal}')">
                         <img src="${arr[i].strMealThumb}" alt="" class="w-100 rounded-3 ">
                         <div class="layer text-center d-flex align-items-center justify-content-center">
                             
-                            <p class="fs-3">${arr[i].strMeal}</p>
+                            <p class="fs-4 text-dark">${arr[i].strMeal}</p>
                         </div>
 
                     </div>
@@ -188,7 +236,7 @@ function displaycategorys(arr){
                 </div>
     `
   }
-  document.getElementById('demo').innerHTML=cartona;
+  mainContainer.innerHTML=cartona;
 }
 
 
@@ -210,25 +258,26 @@ function displaycategorys(arr){
 
 // *************************area***************************
 
-// let button =document.getElementById('btn');
-  // console.log(button);
+
 
 let section2 =document.getElementById('boop');
 let balad = document.getElementById('country');
   let areaData=[]
 
  async function getArea(){
+  $('.inner-loading').fadeIn(500)
   let httpArea= await fetch('https://www.themealdb.com/api/json/v1/1/list.php?a=list')
   respons= await httpArea.json()
   // areaData=respons.meals;
   displayArea(respons.meals)
-  
+  $('.inner-loading').fadeOut(500)
  }
 
 // )
 
 
  function displayArea(arr){
+
   mainContainer.innerHTML="";
   cartona='';
   for(let i=0 ;i<arr.length ;i++){
@@ -255,10 +304,12 @@ let balad = document.getElementById('country');
  
 // 
  async function showMeal(country){
+  $('.inner-loading').fadeIn(500)
   let responsShow= await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${country}`)
   let httpShow = await responsShow.json()
   // areaCONTAINER=httpShow.meals;
   displayShowArea(httpShow.meals)
+  $('.inner-loading').fadeOut(500)
 
 
 
@@ -274,7 +325,7 @@ for(let i=0 ;i<arr.length ;i++){
   <div class="image" onclick="getMealByDetails('${arr[i].idMeal}')">
       <img src="${arr[i].strMealThumb}" alt="" class="w-100 rounded-3 id="photo">
       <div class="layer d-flex justify-content-center align-items-center">
-          <h3>${arr[i].strMeal}</h3>
+          <h3 class="text-white">${arr[i].strMeal}</h3>
       </div>
 
   </div>
@@ -292,13 +343,14 @@ mainContainer.innerHTML=box;
 
 //===================================
 async function getgradient(){
+  $('.inner-loading').fadeIn(500)
   mainContainer.innerHTML="";
   let res = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?i=list')
  let  respos = await res.json();
  
  
  displaygradient(respos.meals.slice(0, 20))
-
+ $('.inner-loading').fadeOut(500)
 }
 
 
@@ -313,8 +365,8 @@ function displaygradient(arr){
     <div class=" " onclick="getfoodbyingradient('${arr[i].strIngredient}')">
        <i class="fa-solid fa-drumstick-bite fa-4x"></i>
         
-            <h3>${arr[i].strIngredient}</h3>
-            <p class="fs-6">${arr[i].strDescription.split(" ").slice(0,20).join(" ")}</p>
+            <h3 class="">${arr[i].strIngredient}</h3>
+            <p class="fs-6 text-center ">${arr[i].strDescription.split(" ").slice(0,20).join(" ")}</p>
        
     </div>
    
@@ -402,61 +454,6 @@ function displayDetails(meal){
     mainContainer.innerHTML = cartoona
 }
 
-
-
-
-// async function searchByName(name) {
- 
-//   mainContainer.innerHTML = ""
-  
-
-//   let response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`)
-//   response = await response.json()
-//   // response=response.meals
-
-  
-//   displayname(response.meals)
-
-// }
-
-
-
-
-// function displayname(arr){
-  
-//   box='';
-//   for(let i=0 ;i<arr.length ;i++){
-//     box+=
-//     `<div class="col-md-3">
-//     <div class="image" onclick="getMealByDetails('${arr[i].idMeal}')">
-//         <img src="${arr[i].strMealThumb}" alt="" class="w-100 rounded-3 id="photo">
-//         <div class="layer d-flex justify-content-center align-items-center">
-//             <h3>${arr[i].strMeal}</h3>
-//         </div>
-  
-//     </div>
-   
-//   </div>
-//   `
-    
-//   }
-//   mainContainer.innerHTML+=box;
-
-
-
-// }
-
-
-
-
-
-
-
-
-
-
-  
- 
 // / **********************contact us***********************
 
 let contactUl =document.getElementById('contactUs');
@@ -465,33 +462,34 @@ let alertMessage= document.getElementById('alert1');
  
 
 function displaycontact(){
-  container.innerHTML=`
+
+  mainContainer.innerHTML=`
   
   <div class="w-75 m-auto">
             
                 <div class="row text-center">
                     <div class="col-md-6">
-                        <input type="text" placeholder="enter your name" class="control-form w-100 rounded-3 py-2 my-2" id="userNAME" oninput="validationName()">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none " id="alert1">Special characters and numbers not allowed</p>
+                        <input type="text" onkeyup="validation()" placeholder="enter your name" class="control-form w-100 rounded-3 py-2 my-2" id="userNAME">
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none " id="alertname">Special characters and numbers not allowed</p>
 
-                        <input type="tel" placeholder="enter your phone" class="control-form w-100 rounded-3 py-2 my-2 ">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none">Enter valid Phone Number</p>
+                        <input type="tel" placeholder="enter your phone" class="control-form w-100 rounded-3 py-2 my-2 " id="phoneNumber" onkeyup="validation()">
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" id="alertphone" >Enter valid Phone Number</p>
 
-                        <input type="password" placeholder="enter your password" class="control-form w-100 rounded-3 py-2 my-2 ">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none">Enter valid password *Minimum eight characters, at least one letter and one number</p>
+                        <input type="password" id="passwordInput" placeholder="enter your password" class="control-form w-100 rounded-3 py-2 my-2 " onkeyup="validation()">
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" id="alertpassword">Enter valid password *Minimum eight characters, at least one letter and one number</p>
 
 
                         
                     </div>
                     <div class="col-md-6">
-                        <input type="email" placeholder="enter your email" class="control-form w-100 rounded-3 py-2 my-2 ">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none">Email not valid *exemple@yyy.zzz</p>
+                        <input type="email" id="emailInput" placeholder="enter your email" class="control-form w-100 rounded-3 py-2 my-2 " onkeyup="validation()">
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" id="alertemail">Email not valid *exemple@yyy.zzz</p>
 
-                        <input type="number" placeholder="enter your age" class="control-form w-100 rounded-3 py-2 my-2 ">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" >Enter valid age</p>
+                        <input type="number" placeholder="enter your age" id="ageInput" class="control-form w-100 rounded-3 py-2 my-2 " onkeyup="validation()" >
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" id="alertage">age is invalid</p>
 
-                        <input type="password" placeholder="repassword" class="control-form w-100 rounded-3 py-2 my-2 ">
-                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none">Enter valid repassword</p>
+                        <input type="password"id="repasswordInput" placeholder="repassword" id="alertrepassword" class="control-form w-100 rounded-3 py-2 my-2 " onkeyup="validation()">
+                        <p class="alert alert-danger w-100 form-control text-center fs-6 d-none" id="alertrepassword">password and repassword not match</p>
 
 
                         
@@ -499,7 +497,7 @@ function displaycontact(){
                    
                 </div>
               <div class="m-auto fit-content">
-              <button type="submit" class="btn btn-outline-danger px-5" disabled >submit</button>
+              <button id="submitBtn" type="submit" class="btn btn-outline-danger px-5" disabled >submit</button>
 
               </div>
                 
@@ -508,43 +506,142 @@ function displaycontact(){
        
     
   `
+ searchcontainer.innerHTML="",
+
+  document.getElementById('userNAME').addEventListener('focus',()=>{
+    nameInputTouched=true;
+  })
+  document.getElementById('phoneNumber').addEventListener('focus',()=>{
+    phoneInputTouched=true;
+  })
+  document.getElementById('passwordInput').addEventListener('focus',()=>{
+    passwordInputTouched=true;
+  })
+  document.getElementById('emailInput').addEventListener('focus',()=>{
+    emailInputTouched=true;
+  })
+  document.getElementById('ageInput').addEventListener('focus',()=>{
+    ageInputTouched=true;
+  })
+  document.getElementById('repasswordInput').addEventListener('focus',()=>{
+    repasswordInputTouched=true;
+  })
   }
  
 
-  
-  // function validationName(){
-  //   // displaycontact()
+  //????????????????????????????????????????????????????????????????
  
-  //   // console.log(userName);
 
 
-  //   let regex = /^[a-zA-Z]{3}$/
-  //   let text =userName.value;
-    
-   
-
-  //   console.log(text);
-  //   if(regex.test(text)==true){
-  //     // userName.classList.add('is-valid')
-  //     // return true ;
+let nameInputTouched =false;
+let emailInputTouched =false;
+let ageInputTouched =false;
+let phoneInputTouched =false;
+let passwordInputTouched =false;
+let repasswordInputTouched =false;
 
 
-  //   }else{
-  //     userName.classList.add('is-invalid')
-  //     alertMessage.classList.remove("d-none")
-      
 
-
-  //     return false;
-
-
-  //   }
-
-  // }
-  
-  function closenav(){
-    $('.nav-side').animate({left:'-250px'},1000)
-    $('.open-close-icon').addClass('d-none')
-    $('#home .fa-bars').removeClass('d-none')
-  
+function validation(){
+  if(nameInputTouched){
+    if(nameValid()){
+      document.getElementById('alertname').classList.replace('d-block','d-none')
+    }else{
+      document.getElementById('alertname').classList.replace('d-none','d-block',)
+    }
   }
+
+  if(ageInputTouched){
+    if(ageValid()){
+      document.getElementById('alertage').classList.replace('d-block','d-none')
+    }else{
+      document.getElementById('alertage').classList.replace('d-none','d-block',)
+    }
+  }
+if(phoneInputTouched){
+  if(phoneValid()){
+    document.getElementById('alertphone').classList.replace('d-block','d-none')
+  }else{
+    document.getElementById('alertphone').classList.replace('d-none','d-block',)
+  }
+
+}
+if(emailInputTouched){
+  if(emailValid()){
+    document.getElementById('alertemail').classList.replace('d-block','d-none')
+  }else{
+    document.getElementById('alertemail').classList.replace('d-none','d-block',)
+  }
+}
+
+
+if(passwordInputTouched){
+  if(passwordValid()){
+    document.getElementById('alertpassword').classList.replace('d-block','d-none')
+  }else{
+    document.getElementById('alertpassword').classList.replace('d-none','d-block',)
+  }
+}
+if(repasswordInputTouched){
+  if(repasswordValid()){
+    document.getElementById('alertrepassword').classList.replace('d-block','d-none')
+  }else{
+    document.getElementById('alertrepassword').classList.replace('d-none','d-block',)
+  }
+
+}
+
+
+
+
+
+  if(
+    nameValid()&&
+    ageValid()&&
+    emailValid()&&
+    phoneValid()&&
+    passwordValid()&&
+    repasswordValid()
+  ){
+    document.getElementById('submitBtn').removeAttribute('disabled')
+
+
+  }else{
+    document.getElementById('submitBtn').setAttribute('disabled',true)
+
+  }
+  
+
+}
+
+function nameValid(){
+  return(/^[a-zA-Z]{2,12}/.test(document.getElementById('userNAME').value))
+
+}
+function emailValid(){
+  return (/.*@[a-z0-9.-]*/i.test(document.getElementById('emailInput').value))
+}
+function phoneValid(){
+  return(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(document.getElementById('phoneNumber').value))
+
+}
+
+
+function ageValid(){
+  return(/^\S[0-9]{0,3}$/.test(document.getElementById('ageInput').value))
+
+
+}
+function passwordValid(){
+  return(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(document.getElementById('passwordInput').value))
+
+}
+function repasswordValid(){
+  return(document.getElementById('repasswordInput').value ==document.getElementById('passwordInput').value)
+
+}
+
+
+
+
+

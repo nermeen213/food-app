@@ -13,19 +13,21 @@
 </head>
 <body>
     <div class="loading">
-        <span class="loader"></span>
+        <!-- <span class="loader"></span> -->
+        <i class="fa fa-spinner fa-spin fa-5x"></i>
+
     </div>
 
-     <section id="home" class="d-flex">
+     <section id="home" class="">
         <div class="nav-side d-flex ">
             <div class="navbar text-white">
-                <div class="ul">
-                    <ul class="list-unstyled">
-                        <li class="py-2 position-relative cursor-pointer" id="search" onclick="closenav()" style="top: 0px;">Search</li>
-                        <li class="py-2 position-relative cursor-pointer" id="category" onclick="getcategory() ; closenav()" style="top: 0px;">Categories</li>
-                        <li class="py-2 position-relative cursor-pointer"  style="top: 0px;" onclick=" getArea() ; closenav()">Area</li>
-                        <li class="py-2 position-relative cursor-pointer" onclick="getgradient() ; closenav()" style="top: 0px;">Ingredients</li>
-                        <li class="py-2 position-relative cursor-pointer" id="contactUs" onclick="displaycontact();closenav()" style="top: 0px;">Contact Us</li>
+                <div class="ul d-flex">
+                    <ul class="list-unstyled overflow-hidden ps-3 ">
+                        <li class="py-2 position-relative cursor-pointer fs-5" id="search" onclick=" showSearchInput() ;closenav() " style="top: 0px;">Search</li>
+                        <li class="py-2 position-relative cursor-pointer fs-5" id="category" onclick="getcategory() ; closenav()" style="top: 0px;">Categories</li>
+                        <li class="py-2 position-relative cursor-pointer fs-5"  style="top: 0px;" onclick=" getArea() ; closenav()">Area</li>
+                        <li class="py-2 position-relative cursor-pointer fs-5" onclick="getgradient() ; closenav()" style="top: 0px;">Ingredients</li>
+                        <li class="py-2 position-relative cursor-pointer fs-5" id="contactUs" onclick="displaycontact();closenav()" style="top: 0px;">Contact Us</li>
                     </ul>
                 </div>
                 <div class="nav-footer">
@@ -58,20 +60,29 @@
 
             </div>
         </div>
-
-        <div class="container text-center d-flex justify-content-center" id="searchContainer">
+        <div class="container w-75 p-2 " id="searchContainer">
            
-            <div class="row g-4" id="demo">
-
-
-
-
-
-                
-            </div>
-    
+          
            
         </div>
+        <div class="min-vh-100 position-relative">
+            <div class="inner-loading top-0 start-0 end-0 bottom-0 justify-content-center align-items-center">
+                
+                <i class="fa fa-spinner fa-spin fa-5x"></i>
+            </div>
+    
+            <div class="container text-center d-flex justify-content-center" id="searchContainer">
+               
+                <div class="row g-4" id="demo">
+                    
+                </div>
+        
+               
+            </div>
+
+
+        </div>
+        
        
     </section>    
 
